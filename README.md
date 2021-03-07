@@ -1,7 +1,6 @@
-# Pool
+# Open Ethereum Pool UI
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+This is a UI built with Ember for the project: "Open Source Ethereum Mining Pool", by https://github.com/sammy007
 
 ## Prerequisites
 
@@ -13,35 +12,47 @@ You will need the following things properly installed on your computer.
 * [Ember CLI](http://www.ember-cli.com/)
 * [PhantomJS](http://phantomjs.org/)
 
-## Installation
+## Building
 
-* `git clone <repository-url>` this repository
-* change into the new directory
-* `npm install`
-* `bower install`
+Install nodejs. I suggest using LTS version >= 4.x from https://github.com/nodesource/distributions or from your Linux distribution or simply install nodejs on Ubuntu Xenial 16.04.
 
-## Running / Development
+The frontend is a single-page Ember.js application that polls the pool API to render miner stats.
 
-* `ember server`
-* Visit your app at [http://localhost:4200](http://localhost:4200).
+Change <code>ApiUrl: '//example.net/'</code> in <code>config/environment.js</code> to match your domain name. Also don't forget to adjust other options.
 
-### Code Generators
+    npm install -g ember-cli@2.9.1
+    npm install -g bower
+    npm install
+    bower install
+    ./build.sh
 
-Make use of the many generators for code, try `ember help generate` for more details
+Configure nginx to serve API on <code>/api</code> subdirectory.
+Configure nginx to serve <code>www/dist</code> as static website.
 
-### Running Tests
+## Serving API using nginx
 
-* `ember test`
-* `ember test --server`
+Create an upstream for API:
 
-### Building
+    upstream api {
+        server 127.0.0.1:8080;
+    }
 
-* `ember build` (development)
-* `ember build --environment production` (production)
+and add this setting after <code>location /</code>:
 
-### Deploying
+    location /api {
+        proxy_pass http://api;
+    }
 
-Specify what it takes to deploy your app.
+## Customization
+
+You can customize the layout using built-in web server with live reload:
+
+    ember server --port 8082 --environment development
+
+**Don't use built-in web server in production**.
+
+Check out <code>www/app/templates</code> directory and edit these templates
+in order to customise the frontend.
 
 ## Further Reading / Useful Links
 
